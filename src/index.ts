@@ -1,7 +1,7 @@
 import http from 'http'
 import { v4 as uuidv4 } from 'uuid'
-import { type sendResponseType, STATUS_CODE } from './type'
-let todos: { id: string; title: string }[] = []
+import { type sendResponseType, type todoType, STATUS_CODE } from './type'
+let todos: todoType[] = []
 const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
   'Access-Control-Allow-Origin': '*',
@@ -58,7 +58,7 @@ const handlePostRequest = (res, body) => {
   const todoData = parseRequestBody(res, body)
   if (todoData === null) return
   if (todoData?.title) {
-    const newTodo = {
+    const newTodo: todoType = {
       id: uuidv4(),
       title: todoData.title,
     }
