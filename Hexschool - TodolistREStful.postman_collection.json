@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "baff3421-03bb-43bb-843c-4d3b74c8f4c1",
+		"name": "Hexschool - TodolistREStful",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3432941"
+	},
+	"item": [
+		{
+			"name": "取得 代辦清單列表",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/todos",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得 單筆代辦清單事項",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/todos/{{UID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos",
+						"{{UID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增 代辦清單事項",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"12dddddd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/todos",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "編輯 單筆代辦清單事項",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/todos/{{UID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos",
+						"{{UID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除 全部代辦清單",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/todos",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除 單一代辦清單事項",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/todos/{{UID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"todos",
+						"{{UID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "UID",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
