@@ -1,5 +1,5 @@
 import http from 'http'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4, validate as uuidValidat } from 'uuid'
 import { type sendResponseType, type todoType, STATUS_CODE } from './type'
 let todos: todoType[] = []
 const headers = {
@@ -26,6 +26,8 @@ const parseRequestBody = (res, body: string) => {
     return null
   }
 }
+
+// 處理GET請求
 const handleGetRequest = (req, res) => {
   const UID = req.url.split('/').pop()
 
@@ -36,18 +38,26 @@ const handleGetRequest = (req, res) => {
       body: { success: true, data: todos, length: todos.length },
     })
   } else {
-    const filterIndex = todos.findIndex((item) => item.id === UID)
-    if (filterIndex >= 0) {
-      sendResponse({
-        res,
-        status: STATUS_CODE.success,
-        body: { success: true, data: todos[filterIndex], length: todos.length },
-      })
+    if (uuidValidat(UID)) {
+      const filterIndex = todos.findIndex((item) => item.id === UID)
+      if (filterIndex >= 0) {
+        sendResponse({
+          res,
+          status: STATUS_CODE.success,
+          body: { success: true, data: todos[filterIndex], length: todos.length },
+        })
+      } else {
+        sendResponse({
+          res,
+          status: STATUS_CODE.success,
+          body: { success: true, data: [], message: '沒有這筆資料' },
+        })
+      }
     } else {
       sendResponse({
         res,
-        status: STATUS_CODE.success,
-        body: { success: true, data: [], message: '沒有這筆資料' },
+        status: STATUS_CODE.error,
+        body: { success: false, message: 'UID 格式錯誤' },
       })
     }
   }
@@ -81,8 +91,6 @@ const handlePostRequest = (res, body) => {
 // 處理DELETE請求
 const handleDeleteRequest = (req, res) => {
   const UID = req.url.split('/').pop()
-  const filterIndex = todos.findIndex((item) => item.id === UID)
-
   if (UID === 'todos') {
     todos.length = 0
     sendResponse({
@@ -90,19 +98,30 @@ const handleDeleteRequest = (req, res) => {
       status: STATUS_CODE.success,
       body: { success: true, data: todos },
     })
-  } else if (filterIndex !== -1) {
-    todos.splice(filterIndex, 1)
-    sendResponse({
-      res,
-      status: STATUS_CODE.success,
-      body: { success: true, data: todos },
-    })
   } else {
-    sendResponse({
-      res,
-      status: STATUS_CODE.error,
-      body: { success: false, message: '不存在這筆資料' },
-    })
+    if (uuidValidat(UID)) {
+      const filterIndex = todos.findIndex((item) => item.id === UID)
+      if (filterIndex !== -1) {
+        todos.splice(filterIndex, 1)
+        sendResponse({
+          res,
+          status: STATUS_CODE.success,
+          body: { success: true, data: todos },
+        })
+      } else {
+        sendResponse({
+          res,
+          status: STATUS_CODE.error,
+          body: { success: false, message: '不存在這筆資料' },
+        })
+      }
+    } else {
+      sendResponse({
+        res,
+        status: STATUS_CODE.error,
+        body: { success: false, message: 'UID 格式錯誤' },
+      })
+    }
   }
 }
 
@@ -110,21 +129,30 @@ const handleDeleteRequest = (req, res) => {
 const handlePatchRequest = (req, res, body) => {
   const UID = req.url.split('/').pop()
   const todoData = parseRequestBody(res, body)
-  const filterIndex = todos.findIndex((item) => item.id === UID)
+
   if (todoData === null) return
   if (todoData?.title) {
-    if (filterIndex !== -1) {
-      todos[filterIndex].title = todoData.title
-      sendResponse({
-        res,
-        status: STATUS_CODE.success,
-        body: { success: true, data: todos },
-      })
+    const filterIndex = todos.findIndex((item) => item.id === UID)
+    if (uuidValidat(UID)) {
+      if (filterIndex !== -1) {
+        todos[filterIndex].title = todoData.title
+        sendResponse({
+          res,
+          status: STATUS_CODE.success,
+          body: { success: true, data: todos },
+        })
+      } else {
+        sendResponse({
+          res,
+          status: STATUS_CODE.error,
+          body: { success: false, message: '不存在這筆資料' },
+        })
+      }
     } else {
       sendResponse({
         res,
         status: STATUS_CODE.error,
-        body: { success: false, message: '不存在這筆資料' },
+        body: { success: false, message: 'UID 格式錯誤' },
       })
     }
   } else {
